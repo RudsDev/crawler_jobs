@@ -1,0 +1,14 @@
+{
+  "name": "vagas_crawler",
+  "version": "1.0.0",
+  "description": "Crawler que busca vagas de acordo com um parâmetros pré estabelicidos no site RioVagas.com.",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "keywords": [
+    "vagas"
+  ],
+  "author": "Rafael Dias",
+  "license": "ISC"
+}
