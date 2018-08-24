@@ -8,20 +8,25 @@ module.exports = class CrawlerController {
 		this._service = new CRAWLER_SERVICE();
 	}
 
-	async run(){
+	/*async run(){
 		try {
 			return await this._service.run(this._getElements);
+			return await this._service.run();
 		} catch (err) {
 			throw new Error('Peguei o erro');
 		}
-	}
+	}*/
 
 	_showPagelength(data){
 		console.log('Grabbed', data.body.length, 'bytes');
 	}
 
-	_getElements($){
-		return $('title').text();
+	async getElements(data){
+		return await this._service.get$()
+	}
+
+	_getURLInfos(data){
+		return data.request;
 	}
 
 }
