@@ -8,8 +8,12 @@ const CrawlerDepthController = require('./../controllers/CrawlerDepthController'
 const crawlerDepthController = new CrawlerDepthController();
 
 router.get('/:value', function(req, res) {
-	crawlerController.getElements()
-		.then(data=>res.send(data))
+	crawlerController.showUrls()
+		.then(data=>{
+			//console.log(data);
+			// res.send(data);
+			res.send(undefined);
+		})
 		.catch(err=>res.send(err));
 });
 
