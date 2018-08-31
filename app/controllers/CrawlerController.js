@@ -8,16 +8,16 @@ module.exports = class CrawlerController {
 		this._service = new CRAWLER_SERVICE();
 	}
 
+	find(){
+		this._service.run('https://riovagas.com.br/page/2/');
+	}
+
 	_showPagelength(data){
 		console.log('Grabbed', data.body.length, 'bytes');
 	}
 
 	_getURLInfos(data){
 		return data.request;
-	}
-
-	showUrls(){
-		this._service.run('https://riovagas.com.br/page/2/');
 	}
 
 	_sanatizeInfos(data){

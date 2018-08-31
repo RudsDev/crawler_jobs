@@ -82,9 +82,18 @@ module.exports.CrawlerService = class CrawlerService {
 		.then($=>{
 			let tags = $('div.post-byline a');
 			this._posts.push(new Post(hrefJob, this._createUrlTags(tags)));
-			console.log(this._posts);
+			// console.log(this._posts);
+			this.showTags_TEST(this._posts);
 		})
 		.catch(err=>console.log(err));
+	}
+
+	showTags_TEST(posts = []){
+		posts.forEach(post=>{
+			post.tags.forEach(tag=>{
+				console.log(tag);
+			})	
+		})
 	}
 
 }

@@ -14,6 +14,10 @@ module.exports = class Post {
     return this._date[0][0];
   }
 
+  get tags(){
+    return this._tags;
+  }
+
   _generateDate(hrefJob){
     let target = DATE_RX.exec(hrefJob);
     let date = undefined;
