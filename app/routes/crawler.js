@@ -7,19 +7,13 @@ const crawlerController = new CrawlerController();
 const CrawlerDepthController = require('./../controllers/CrawlerDepthController');
 const crawlerDepthController = new CrawlerDepthController();
 
-router.get('/:value', function(req, res) {
-	crawlerController.find()
-		.then(data=>{
-			//console.log(data);
-			// res.send(data);
-			res.send(undefined);
-		})
-		.catch(err=>res.send(err));
+router.get('/:value', async function(req, res) {
+	const URI_TESTE = 'https://riovagas.com.br/page/2/';
+	res.send(await crawlerController.run(URI_TESTE));
 });
 
-
 router.get('/', function(req, res) {
-	crawlerDepthController.run();
+	res.send(crawlerDepthController.run());
 });
 
 module.exports = router;

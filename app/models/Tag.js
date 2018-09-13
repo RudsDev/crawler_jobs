@@ -7,4 +7,9 @@ module.exports = class Tag {
     this._text = text;
   }
 
+  get href(){
+    return this._href;
+  }
+
+
 }

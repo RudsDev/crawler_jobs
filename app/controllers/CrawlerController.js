@@ -1,6 +1,7 @@
 "use strict";
 
-const CRAWLER_SERVICE = require('../services/CrawlerService').CrawlerService;
+const CRAWLER_SERVICE = require('../services/CrawlerService')
+	.CrawlerServiceJson;
 
 module.exports = class CrawlerController {
     
@@ -8,20 +9,24 @@ module.exports = class CrawlerController {
 		this._service = new CRAWLER_SERVICE();
 	}
 
-	find(){
-		this._service.run('https://riovagas.com.br/page/2/');
+	async run(url){
+		return this._service.run(url)
 	}
 
-	_showPagelength(data){
+	showPagelength(data){
 		console.log('Grabbed', data.body.length, 'bytes');
 	}
 
-	_getURLInfos(data){
+	getURLInfos(data){
 		return data.request;
 	}
 
 	_sanatizeInfos(data){
 		console.log((data.attribs));
+	}
+
+	posts(){
+		return this._service.posts;
 	}
 
 }
