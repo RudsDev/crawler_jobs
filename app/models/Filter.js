@@ -5,11 +5,11 @@ const DATE_RX = /\d{4}\/(\d{2})\/(\d{2})/
 module.exports = class Filter {
 
   constructor(
-    preFilterExc = ['facebook', 'newsletter'],
+    sanatize = ['facebook', 'newsletter'],
     tagsIncludes = ['atendimento', 'rio-de-janeiro'],
-    tagsExcludes = ['caixa','vendedor']) {
+    tagsExcludes = ['caixa','vendedor', ]) {
 
-    this._preFilterExc = preFilterExc;
+    this._sanatize = sanatize;
     this._tagsIncludes = tagsIncludes;
     this._tagsExcludes = tagsExcludes;
   }
@@ -24,15 +24,14 @@ module.exports = class Filter {
     .some(item=>href.includes(item));
   }
 
-  _preFilter(href = ""){
-    return !this._preFilterExc
+  sanatize(href = ""){
+    return !this._sanatize
     .some(item=>href.includes(item));
   }
   
   filter(href){
     return this._include(href) 
-      && this._exclude(href) 
-      && this._preFilter(href);
+      && this._exclude(href);
   }
   
 }
