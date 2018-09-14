@@ -1,8 +1,11 @@
 "use strict";
 
 const MyCrawler = require('../scripts/MyCrawler').MyCrawler;
-const LAST_PAGE = 5;
-const Filter = require('../models/Filter');
+
+const FilterJob = require('../Filter/FilterJob').FilterJob;
+
+const LAST_PAGE = 12;
+const Filter = require('../Filter/Filter');
 const Job = require('../models/Job');
 const Tag = require('../models/Tag');
 
@@ -10,6 +13,7 @@ module.exports.CrawlerServiceJson = class CrawlerServiceJson {
 
 	constructor(){
 		this._filter = new Filter();
+		this._filterJobs = new FilterJob();
 		this._hrefPages = [];
 	}
 
@@ -22,7 +26,6 @@ module.exports.CrawlerServiceJson = class CrawlerServiceJson {
 	}
 
 	_findPages(page){
-
 		return new Promise(async (res,rej)=>{
 			let $ = await MyCrawler._get$(page);
 			let data = $('div.wp-pagenavi a.page');
@@ -81,7 +84,9 @@ module.exports.CrawlerServiceJson = class CrawlerServiceJson {
 		let createJobProm = new Promise((res,rej)=>{
 			let result = hrefJobs.map(async hrefJob=>{
 				let tags = await createTagBatchProm(hrefJob,[]);
-				return (new Job(hrefJob, tags));
+				console.log(hrefJob);
+				if(this._filterJobs.filter(tags))
+					return (new Job(hrefJob, tags));
 			})
 			res(result);
 		});
