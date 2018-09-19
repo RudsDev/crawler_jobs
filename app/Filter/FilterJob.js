@@ -12,11 +12,10 @@ module.exports.FilterJob = class FilterJob {
 
   filter(tags){
     let result = true;
-    tags.forEach((tag)=>{
-      // console.log(tag._href);
-      if(this._filter.exclude(tag._href) && (tags.indexOf(tag)) ){
+    tags.forEach((tag)=>{      
+      if(this._filter.exclude(tag._href)){
         result = false;
-        console.log('***ACHOU!' + ' - ' + tag._href + ' - ' + result);
+        console.log('***FILTROU: ' + tag._href);
         return result;
       }
     });

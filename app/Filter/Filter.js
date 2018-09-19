@@ -7,7 +7,8 @@ module.exports = class Filter {
   constructor(
     tagsSanatize = ['facebook', 'newsletter'],
     tagsIncludes = ['atendimento', 'rio-de-janeiro'],
-    tagsExcludes = ['emprego-net','pcd','caixa','vendedor', 'vendas']) {
+    tagsExcludes = ['pcd','caixa','vendedor','vendas',
+    'emprego-net',]) {
 
     this._tagsSanatize = tagsSanatize;
     this._tagsIncludes = tagsIncludes;

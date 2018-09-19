@@ -18,15 +18,17 @@ module.exports.CrawlerServiceJson = class CrawlerServiceJson {
 	}
 
 	run(page){
+		this._hrefPages.push(page);
 		return new Promise(async (res,rej)=>{
 			await this._findPages(page);
-			let jobs = await this._findHrefJobs(this._hrefPages);
+			let jobs = await this._findHrefJobsinPages(this._hrefPages);
 			res(Promise.all(jobs.map(job=>job)));
 		})
 	}
 
 	_findPages(page){
 		return new Promise(async (res,rej)=>{
+
 			let $ = await MyCrawler._get$(page);
 			let data = $('div.wp-pagenavi a.page');
 			let href = data[0].next.next.attribs.href;
@@ -40,17 +42,24 @@ module.exports.CrawlerServiceJson = class CrawlerServiceJson {
 		
 	}
 
-	_findHrefJobs(hrefPages){
-
+	_findHrefJobsinPages(hrefPages){
+		
 		let getHrefJobsProm = new Promise(async (res, rej)=>{
-			let hrefJobsLocal = [];
-			hrefPages.map(async hrefPage=>{
-				let $ = await MyCrawler._get$(hrefPage);
-				let hrefJobElement = $('div.post div.post-headline h2 a');
-				for(let i = 0; i < hrefJobElement.length; i++)
-					hrefJobsLocal.push(hrefJobElement[i].attribs.href);
-				res(hrefJobsLocal);
-			});
+
+			let jobsLocal = ()=>{
+				return new Promise(async (res, rej)=>{
+					let hrefJobsLocal =	hrefPages.map(async hrefPage=>{
+						let jobs = [];
+						let $ = await MyCrawler._get$(hrefPage);
+						let hrefJobElement = await $('div.post div.post-headline h2 a');
+						for(let i = 0; i < hrefJobElement.length; i++)
+							jobs.push(hrefJobElement[i].attribs.href);
+						return jobs;
+					});
+					res(hrefJobsLocal);
+				})
+			};
+			res(Promise.all(await jobsLocal()).then(items=>[].concat(...items)));
 		});
 
 		let createJobsProm = (hrefJobs)=>{
@@ -61,11 +70,10 @@ module.exports.CrawlerServiceJson = class CrawlerServiceJson {
 		
 		return new Promise(async(res, rej)=>{
 			res(await createJobsProm(await getHrefJobsProm));
-		})
+		});
 	}
 	
 	_createJobs(hrefJobs){
-
 		let createTagBatchProm = ((hrefJob, tags)=>{
 			return new Promise(async (res,rej)=>{
 				let $ = await MyCrawler._get$(hrefJob);
@@ -78,22 +86,21 @@ module.exports.CrawlerServiceJson = class CrawlerServiceJson {
 				}
 				res(tags);
 			});
-		})
-
+		});
 
 		let createJobProm = new Promise((res,rej)=>{
 			let result = hrefJobs.map(async hrefJob=>{
 				let tags = await createTagBatchProm(hrefJob,[]);
-				console.log(hrefJob);
 				if(this._filterJobs.filter(tags))
-					return (new Job(hrefJob, tags));
+					return new Job(hrefJob, tags);
 			})
 			res(result);
 		});
-
+		
 		return new Promise(async (res,rej)=>{
 			res(await createJobProm);
-		}); 
+		});
+
 	}
 
 }
