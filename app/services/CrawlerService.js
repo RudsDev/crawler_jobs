@@ -17,7 +17,8 @@ module.exports.CrawlerServiceJson = class CrawlerServiceJson {
 		this._hrefPages = [];
 	}
 
-	run(page){
+	run(page, filter = new Filter()){
+		this._filter = filter;
 		this._hrefPages.push(page);
 		return new Promise(async (res,rej)=>{
 			await this._findPages(page);
@@ -91,8 +92,10 @@ module.exports.CrawlerServiceJson = class CrawlerServiceJson {
 		let createJobProm = new Promise((res,rej)=>{
 			let result = hrefJobs.map(async hrefJob=>{
 				let tags = await createTagBatchProm(hrefJob,[]);
+				let $ = await MyCrawler._get$(hrefJob);
+				let desc = await $('div.post-headline h1');
 				if(this._filterJobs.filter(tags))
-					return new Job(hrefJob, tags);
+					return new Job(desc[0].children[0].data, hrefJob, tags);
 			})
 			res(result);
 		});

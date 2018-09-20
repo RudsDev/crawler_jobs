@@ -4,7 +4,8 @@ const DATE_RX = /\d{4}\/(\d{2})\/(\d{2})/
 
 module.exports = class Job {
 
-  constructor(hrefJob, tags = []){
+  constructor(desc, hrefJob, tags = []){
+    this._desc = desc;
     this._hrefJob = hrefJob;
     this._date = this._generateDate(hrefJob);
     this._tags = tags;
