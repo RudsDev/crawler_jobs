@@ -10,16 +10,33 @@ module.exports.FilterJob = class FilterJob {
     this._filter = new Filter();
   }
 
-  filter(tags){
+  filterNotInclude(tags){
     let result = true;
     tags.forEach((tag)=>{      
       if(this._filter.exclude(tag._href)){
         result = false;
-        console.log('***FILTROU: ' + tag._href);
         return result;
       }
     });
     return result;
+  }
+
+
+  filterInclude(tags){
+    let result = false;
+    tags.forEach((tag)=>{      
+      if(this._filter.include(tag._href)){
+        result = true;
+        return result;
+      }
+    });
+    return result;
+  }
+
+  filter(tags){
+    let include = this.filterInclude(tags);
+    let notInclude = this.filterNotInclude(tags);
+    return include&&notInclude;
   }
 
 }

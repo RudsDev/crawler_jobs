@@ -1,10 +1,7 @@
 "use strict";
 
 const MyCrawler = require('../scripts/MyCrawler').MyCrawler;
-
 const FilterJob = require('../Filter/FilterJob').FilterJob;
-
-const LAST_PAGE = 12;
 const Filter = require('../Filter/Filter');
 const Job = require('../models/Job');
 const Tag = require('../models/Tag');
@@ -12,35 +9,22 @@ const Tag = require('../models/Tag');
 module.exports.CrawlerServiceJson = class CrawlerServiceJson {
 
 	constructor(){
-		this._filter = new Filter();
 		this._filterJobs = new FilterJob();
 		this._hrefPages = [];
 	}
 
-	run(page, filter = new Filter()){
+	run(maxPages, filter = new Filter()){
 		this._filter = filter;
-		this._hrefPages.push(page);
 		return new Promise(async (res,rej)=>{
-			await this._findPages(page);
+			this._findPages(maxPages);
 			let jobs = await this._findHrefJobsinPages(this._hrefPages);
 			res(Promise.all(jobs.map(job=>job)));
 		})
 	}
 
-	_findPages(page){
-		return new Promise(async (res,rej)=>{
-
-			let $ = await MyCrawler._get$(page);
-			let data = $('div.wp-pagenavi a.page');
-			let href = data[0].next.next.attribs.href;
-	
-			if(!href.includes(`/page/${LAST_PAGE}`)){
-				this._hrefPages.push(href);
-				await this._findPages(href);	
-			}
-			res();
-		});
-		
+	_findPages(maxPages){
+		for (let i = 2; i <= maxPages; i++)
+			this._hrefPages.push(`https://riovagas.com.br/page/${i++}/`);
 	}
 
 	_findHrefJobsinPages(hrefPages){
@@ -99,11 +83,8 @@ module.exports.CrawlerServiceJson = class CrawlerServiceJson {
 			})
 			res(result);
 		});
-		
 		return new Promise(async (res,rej)=>{
 			res(await createJobProm);
 		});
-
 	}
-
 }

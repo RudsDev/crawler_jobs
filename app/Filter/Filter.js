@@ -4,7 +4,7 @@ const DATE_RX = /\d{4}\/(\d{2})\/(\d{2})/
 
 module.exports = class Filter {
 
-  constructor(tagsIncludes = [],tagsExcludes = []) {
+  constructor(tagsIncludes = [''], tagsExcludes = []) {
     this._tagsIncludes = tagsIncludes;
     this._tagsExcludes = tagsExcludes;
     this._tagsSanatize =  ['facebook', 'newsletter'];
@@ -32,7 +32,7 @@ module.exports = class Filter {
   }
 
   _preExlcude(){
-    let tagsExcludes = ['pcd','emprego-net'];
+    let tagsExcludes = ['pcd','emprego-net','vendas'];
     tagsExcludes.forEach(tag=>{
       this._tagsExcludes.push(tag);
     });
