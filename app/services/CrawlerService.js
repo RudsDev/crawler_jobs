@@ -23,20 +23,22 @@ module.exports.CrawlerServiceJson = class CrawlerServiceJson {
 	}
 
 	_findPages(maxPages){
-		for (let i = 2; i <= maxPages; i++)
-			this._hrefPages.push(`https://riovagas.com.br/page/${i++}/`);
+		for (let i = 2; i <= maxPages; i++){
+			this._hrefPages.push(`https://riovagas.com.br/page/${i}/`);
+		}
 	}
 
 	_findHrefJobsinPages(hrefPages){
-		
 		let getHrefJobsProm = new Promise(async (res, rej)=>{
 
 			let jobsLocal = ()=>{
 				return new Promise(async (res, rej)=>{
-					let hrefJobsLocal =	hrefPages.map(async hrefPage=>{
+					let hrefJobsLocal = [];
+					hrefJobsLocal =	hrefPages.map(async hrefPage=>{
 						let jobs = [];
 						let $ = await MyCrawler._get$(hrefPage);
 						let hrefJobElement = await $('div.post div.post-headline h2 a');
+						
 						for(let i = 0; i < hrefJobElement.length; i++)
 							jobs.push(hrefJobElement[i].attribs.href);
 						return jobs;
@@ -44,7 +46,7 @@ module.exports.CrawlerServiceJson = class CrawlerServiceJson {
 					res(hrefJobsLocal);
 				})
 			};
-			res(Promise.all(await jobsLocal()).then(items=>[].concat(...items)));
+			res(Promise.all(await jobsLocal()).then(items=>[...new Set([].concat(...items))]));
 		});
 
 		let createJobsProm = (hrefJobs)=>{
