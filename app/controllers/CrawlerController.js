@@ -2,15 +2,14 @@
 
 const CRAWLER_SERVICE = require('../services/CrawlerService')
 	.CrawlerServiceJson;
-
 module.exports = class CrawlerController {
     
 	constructor(){
 		this._service = new CRAWLER_SERVICE();
 	}
 
-	async run(url){
-		return this._service.run(url)
+	async run(maxPages){
+		return this._service.run(maxPages);
 	}
 
 	showPagelength(data){

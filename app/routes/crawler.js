@@ -3,14 +3,13 @@
 const router = require('express').Router();
 const CrawlerController = require('./../controllers/CrawlerController');
 const crawlerController = new CrawlerController();
-const MAX_PAGES = 4;
 
 router.get('/:value', async function(req, res) {
-	res.send(await crawlerController.run(MAX_PAGES));
+	res.send(await crawlerController.run());
 });
 
-router.post('/', function(req, res) {
-	console.log(req.body);
+router.post('/', async function(req, res) {
+	res.send(await crawlerController.run(req.body.maxPages));
 });
 
 module.exports = router;

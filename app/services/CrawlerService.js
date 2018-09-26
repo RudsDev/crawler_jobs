@@ -23,6 +23,7 @@ module.exports.CrawlerServiceJson = class CrawlerServiceJson {
 	}
 
 	_findPages(maxPages){
+		this._hrefPages = [];
 		this._hrefPages.push(`https://riovagas.com.br/`);
 		for (let i = 2; i <= maxPages; i++){
 			this._hrefPages.push(`https://riovagas.com.br/page/${i}/`);
